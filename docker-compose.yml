@@ -1,0 +1,47 @@
+version: '3.7'
+services:
+  mysql:
+    image: mysql
+    container_name: phonebook-database
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: phonebook
+      MYSQL_USER: hitesh
+      MYSQL_PASSWORD: hitesh
+    volumes:
+      - phonebook:/var/lib/mysql
+    networks:
+      - phonebook
+
+  flask:
+    build: 
+      context: .
+    container_name: phonebook-app
+    image: devopshitesh/phonebook-app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+    networks:
+      - phonebook
+    environment:
+      FLASK_ENV: development
+      MYSQL_HOST: phonebook-database
+      MYSQL_USER: hitesh
+      MYSQL_PASSWORD: hitesh
+      MYSQL_DB: phonebook
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+
+networks:
+  phonebook:
+
+volumes:
+  phonebook:
