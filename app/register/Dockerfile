@@ -24,7 +24,7 @@ COPY --from=installer /usr/local/lib/python3.12/site-packages /usr/local/lib/pyt
 
 WORKDIR /app
 
-COPY . .
+COPY app.py .
 
 EXPOSE 5000
 

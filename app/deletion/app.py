@@ -55,43 +55,27 @@ def init_db():
 
 init_db()
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/add_contact', methods=['POST'])
-def add_contact():
-    name = request.form['name']
-    phone = request.form['phone']
-    
-    if name and phone:
-        try:
-            cursor = mysql.connection.cursor()
-            cursor.execute("INSERT INTO contacts (name, phone) VALUES (%s, %s)", (name, phone))
-            mysql.connection.commit()
-            flash('Contact added successfully!', 'success')
-        except Exception as e:
-            flash(f"Error adding contact: {e}", 'error')
-    else:
-        flash('Please provide both name and phone number.', 'error')
-    
-    return redirect('/')
 
 @app.route('/view_contacts')
 def view_contacts():
+    home_service_url = os.getenv('HOME_SERVICE_URL')
+    delete_service_url = os.getenv('DELETE_SERVICE_URL')
     try:
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT * FROM contacts")
         contacts = cursor.fetchall()
+        print("**********")
         print(contacts)
-        return render_template('view_contacts.html', contacts=contacts)
+        return render_template('view_contacts.html', contacts=contacts, home_service_url=home_service_url, delete_service_url=delete_service_url)
     except Exception as e:
         flash(f"Error fetching contacts: {e}", 'error')
-        return redirect('/')
+        print(e)
+        return redirect(home_service_url)
 
 @app.route('/delete_contact', methods=['POST'])
 def delete_contact():
     contact_id = request.form['id']
+    print(contact_id)
     try:
         cursor = mysql.connection.cursor()
         cursor.execute("DELETE FROM contacts WHERE id = %s", (contact_id,))
@@ -102,4 +86,4 @@ def delete_contact():
     return redirect('/view_contacts')
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=True, port=5002)

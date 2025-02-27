@@ -3,13 +3,10 @@ from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import os 
 import sys
-from dotenv import load_dotenv
 
 app= Flask(__name__, template_folder='templates')
 app.secret_key = "your_secret_key"
 
-
-load_dotenv()
 app.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST')
 app.config['MYSQL_USER'] = os.getenv('MYSQL_USER')
 app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD')
@@ -55,12 +52,9 @@ def init_db():
 
 init_db()
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
 @app.route('/add_contact', methods=['POST'])
 def add_contact():
+    home_service_url = os.getenv('HOME_SERVICE_URL')
     name = request.form['name']
     phone = request.form['phone']
     
@@ -75,31 +69,7 @@ def add_contact():
     else:
         flash('Please provide both name and phone number.', 'error')
     
-    return redirect('/')
-
-@app.route('/view_contacts')
-def view_contacts():
-    try:
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT * FROM contacts")
-        contacts = cursor.fetchall()
-        print(contacts)
-        return render_template('view_contacts.html', contacts=contacts)
-    except Exception as e:
-        flash(f"Error fetching contacts: {e}", 'error')
-        return redirect('/')
-
-@app.route('/delete_contact', methods=['POST'])
-def delete_contact():
-    contact_id = request.form['id']
-    try:
-        cursor = mysql.connection.cursor()
-        cursor.execute("DELETE FROM contacts WHERE id = %s", (contact_id,))
-        mysql.connection.commit()
-        flash('Contact deleted successfully!', 'success')
-    except Exception as e:
-        flash(f"Error deleting contact: {e}", 'error')
-    return redirect('/view_contacts')
+    return redirect(home_service_url)
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=True, port=5001)

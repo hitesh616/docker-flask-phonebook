@@ -1,0 +1,11 @@
+environment variables 
+
+HOME_SERVICE_URL=
+
+MYSQL_HOST=
+
+ MYSQL_USER=
+
+ MYSQL_PASSWORD=
+
+ MYSQL_DB=
