@@ -14,11 +14,11 @@ services:
     networks:
       - phonebook
 
-  flask:
+  flask-home:
     build: 
-      context: .
-    container_name: phonebook-app
-    image: devopshitesh/phonebook-app
+      context: app/home
+    container_name: phonebook-home
+    image: devopshitesh/phonebook-home
     ports:
       - "5000:5000"
     depends_on:
@@ -27,10 +27,8 @@ services:
       - phonebook
     environment:
       FLASK_ENV: development
-      MYSQL_HOST: phonebook-database
-      MYSQL_USER: hitesh
-      MYSQL_PASSWORD: hitesh
-      MYSQL_DB: phonebook
+      REGISTER_SERVICE_URL: /add_contact
+      DELETION_SERVICE_URL: /view_contacts
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/"]
@@ -39,6 +37,75 @@ services:
       retries: 5
       start_period: 30s
 
+  flask-register:
+    build:
+      context: app/register
+    container_name: phonebook-register
+    image: devopshitesh/phonebook-register
+    ports:
+      - "5001:5001"
+    depends_on:
+      - mysql
+      - flask-home
+    networks:
+      - phonebook
+    environment:
+      HOME_SERVICE_URL: /
+      MYSQL_HOST: phonebook-database
+      MYSQL_USER: hitesh
+      MYSQL_PASSWORD: hitesh
+      MYSQL_DB: phonebook
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+  flask-deletion:
+    build:
+      context: app/deletion
+    container_name: phonebook-deletion
+    image: devopshitesh/phonebook-deletion
+    ports:
+      - "5002:5002"
+    depends_on:
+      - mysql
+      - flask-home
+      - flask-register
+    networks:
+      - phonebook
+    environment:
+      HOME_SERVICE_URL: /
+      DELETE_SERVICE_URL: /delete_contact
+      MYSQL_HOST: phonebook-database
+      MYSQL_USER: hitesh
+      MYSQL_PASSWORD: hitesh
+      MYSQL_DB: phonebook
+      MYSQL_CURSORCLASS: DictCursor
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5002"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+
+  nginx:
+    build: 
+      context: nginx
+    container_name: nginx
+    image: devopshitesh/phonebook-nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - mysql
+      - flask-home
+      - flask-register
+    networks:
+      - phonebook
+    restart: always
 
 networks:
   phonebook:
