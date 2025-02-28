@@ -59,7 +59,7 @@
                         <td>{{ contact.name }}</td>
                         <td>{{ contact.phone }}</td>
                         <td>
-                            <form method="POST" action="{{ delete_service_url }}">
+                            <form method="POST" action="/delete_contact">
                                 <input type="hidden" name="id" value="{{ contact.id }}">
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                             </form>
@@ -69,7 +69,7 @@
                 </tbody>
             </table>
 
-            <a href="{{ home_service_url}}" class="btn btn-primary btn-block">Add New Contact</a>
+            <a href="/" class="btn btn-primary btn-block">Add New Contact</a>
         </div>
     </div>
 

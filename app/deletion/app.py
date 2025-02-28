@@ -30,7 +30,7 @@ def init_db():
             host=app.config['MYSQL_HOST'],
             user=app.config['MYSQL_USER'],
             passwd=app.config['MYSQL_PASSWORD'],
-            database=app.config['MYSQL_DB'],  # ✅ Explicitly select the DB
+            database=app.config['MYSQL_DB'],  
             cursorclass=MySQLdb.cursors.DictCursor,
         )
         cursor = conn.cursor()
@@ -58,19 +58,16 @@ init_db()
 
 @app.route('/view_contacts')
 def view_contacts():
-    home_service_url = os.getenv('HOME_SERVICE_URL')
-    delete_service_url = os.getenv('DELETE_SERVICE_URL')
     try:
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT * FROM contacts")
         contacts = cursor.fetchall()
-        print("**********")
         print(contacts)
-        return render_template('view_contacts.html', contacts=contacts, home_service_url=home_service_url, delete_service_url=delete_service_url)
+        return render_template('view_contacts.html', contacts=contacts)
     except Exception as e:
         flash(f"Error fetching contacts: {e}", 'error')
         print(e)
-        return redirect(home_service_url)
+        return redirect('/')
 
 @app.route('/delete_contact', methods=['POST'])
 def delete_contact():

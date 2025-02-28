@@ -27,7 +27,7 @@ def init_db():
             host=app.config['MYSQL_HOST'],
             user=app.config['MYSQL_USER'],
             passwd=app.config['MYSQL_PASSWORD'],
-            database=app.config['MYSQL_DB'],  # ✅ Explicitly select the DB
+            database=app.config['MYSQL_DB'],
             cursorclass=MySQLdb.cursors.DictCursor,
         )
         cursor = conn.cursor()
@@ -54,7 +54,6 @@ init_db()
 
 @app.route('/add_contact', methods=['POST'])
 def add_contact():
-    home_service_url = os.getenv('HOME_SERVICE_URL')
     name = request.form['name']
     phone = request.form['phone']
     
@@ -69,7 +68,7 @@ def add_contact():
     else:
         flash('Please provide both name and phone number.', 'error')
     
-    return redirect(home_service_url)
+    return redirect("/")
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True, port=5001)

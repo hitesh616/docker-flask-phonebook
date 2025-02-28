@@ -1,6 +1,4 @@
-environment variables 
-
-HOME_SERVICE_URL=
+environment variables
 
 MYSQL_HOST=
 

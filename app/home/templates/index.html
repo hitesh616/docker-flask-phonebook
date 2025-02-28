@@ -44,7 +44,7 @@
             {% endwith %}
 
             <!-- Contact Form -->
-            <form method="POST" action="{{ register_service_url}}">
+            <form method="POST" action="/add_contact">
                 <div class="form-group">
                     <label for="name">Full Name</label>
                     <input type="text" class="form-control" id="name" name="name" placeholder="Enter full name" required>
@@ -58,7 +58,7 @@
 
             <hr>
 
-            <a href="{{ deletion_service_url }}" class="btn btn-secondary btn-block">View Contacts</a>
+            <a href="/view_contacts" class="btn btn-secondary btn-block">View Contacts</a>
         </div>
     </div>
 

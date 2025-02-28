@@ -7,8 +7,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: phonebook
-      MYSQL_USER: hitesh
-      MYSQL_PASSWORD: hitesh
+      MYSQL_USER: TestUser
+      MYSQL_PASSWORD: TestPassword
     volumes:
       - phonebook:/var/lib/mysql
     networks:
@@ -25,10 +25,6 @@ services:
       - mysql
     networks:
       - phonebook
-    environment:
-      FLASK_ENV: development
-      REGISTER_SERVICE_URL: /add_contact
-      DELETION_SERVICE_URL: /view_contacts
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/"]
@@ -50,10 +46,9 @@ services:
     networks:
       - phonebook
     environment:
-      HOME_SERVICE_URL: /
       MYSQL_HOST: phonebook-database
-      MYSQL_USER: hitesh
-      MYSQL_PASSWORD: hitesh
+      MYSQL_USER: TestUser
+      MYSQL_PASSWORD: TestPassword
       MYSQL_DB: phonebook
     restart: always
     healthcheck:
@@ -77,11 +72,9 @@ services:
     networks:
       - phonebook
     environment:
-      HOME_SERVICE_URL: /
-      DELETE_SERVICE_URL: /delete_contact
       MYSQL_HOST: phonebook-database
-      MYSQL_USER: hitesh
-      MYSQL_PASSWORD: hitesh
+      MYSQL_USER: TestUser
+      MYSQL_PASSWORD: TestPassword
       MYSQL_DB: phonebook
       MYSQL_CURSORCLASS: DictCursor
     restart: always
